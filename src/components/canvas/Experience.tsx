@@ -17,7 +17,7 @@ const CodeSymbol = ({ char, position, color }: { char: string; position: [number
     <Float speed={2} rotationIntensity={1} floatIntensity={1}>
       <group position={position} ref={rotRef}>
         <Text
-          fontSize={1.5}
+          fontSize={1.2}
           color={color}
           anchorX="center"
           anchorY="middle"
@@ -44,12 +44,12 @@ export const Experience = () => {
       <ambientLight intensity={0.5} />
       <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} />
       
-      {/* Floating Syntax Symbols */}
-      <CodeSymbol char="< />" position={[-3, 2, 0]} color="#ff7b72" /> 
-      <CodeSymbol char="{ }" position={[-4, -2, -2]} color="#7ee787" />
-      <CodeSymbol char="&&" position={[3, 1, -1]} color="#d2a8ff" />
-      <CodeSymbol char=";" position={[4, -3, 0]} color="#79c0ff" />
-      <CodeSymbol char="def" position={[0, 3, -5]} color="#8b949e" />
+      {/* Floating Syntax Symbols - Moved to edges */}
+      <CodeSymbol char="< />" position={[-6, 4, -3]} color="#ff7b72" /> 
+      <CodeSymbol char="{ }" position={[-7, -4, -4]} color="#7ee787" />
+      <CodeSymbol char="&&" position={[6, 3, -2]} color="#d2a8ff" />
+      <CodeSymbol char=";" position={[7, -3, -3]} color="#79c0ff" />
+      <CodeSymbol char="def" position={[0, 5, -8]} color="#8b949e" />
 
       {/* Cyber Grid Floor */}
       <group ref={gridRef} position={[0, -2, 0]} rotation={[Math.PI / 2.5, 0, 0]}>

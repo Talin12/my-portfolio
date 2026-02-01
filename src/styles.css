@@ -1,128 +1,480 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
-/* CRITICAL FIX: Ensures the 3D Canvas has space to render */
-html, body, #root {
-  width: 100%;
-  height: 100%;
+/* ==================== RESET & BASE ==================== */
+* {
   margin: 0;
   padding: 0;
-  overflow: hidden; /* Hide scrollbars, we use virtual scroll */
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background-color: #0d1117; /* GitHub Dark Dimmed */
   font-family: 'JetBrains Mono', monospace;
+  background-color: #0d1117;
   color: #c9d1d9;
+  overflow-x: hidden;
 }
 
-/* CRT Scanline Effect Overlay */
-body::after {
-  content: " ";
-  display: block;
-  position: absolute;
+/* ==================== APP LAYOUT ==================== */
+.app-container {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.canvas-background {
+  position: fixed;
   top: 0;
   left: 0;
-  bottom: 0;
-  right: 0;
-  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-  z-index: 10;
-  background-size: 100% 2px, 3px 100%;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
   pointer-events: none;
 }
 
-/* Layout for Overlay */
-.section {
-  height: 100vh;
+.content-layer {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+
+/* ==================== HERO SECTION ==================== */
+.hero-section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+}
+
+.hero-content {
+  max-width: 800px;
+}
+
+.code-tag {
+  color: #7ee787;
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+  opacity: 0.8;
+}
+
+.hero-title {
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #f0f6fc;
+}
+
+.highlight {
+  color: #58d5d8;
+  background: linear-gradient(135deg, #58d5d8 0%, #7ee787 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-subtitle {
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  color: #8b949e;
+  margin-bottom: 1.5rem;
+}
+
+.hero-description {
+  font-size: 1.1rem;
+  color: #8b949e;
+  line-height: 1.6;
+  margin-bottom: 2.5rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hero-links {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  margin-bottom: 2.5rem;
+}
+
+.social-icon {
+  color: #8b949e;
+  transition: all 0.3s ease;
+  padding: 0.8rem;
+  border-radius: 50%;
+  background: rgba(139, 148, 158, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.social-icon:hover {
+  color: #58d5d8;
+  background: rgba(88, 213, 216, 0.1);
+  transform: translateY(-3px);
+}
+
+.hero-cta {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-download, .btn-outline {
+  padding: 0.9rem 2rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.btn-download {
+  background: linear-gradient(135deg, #58d5d8 0%, #7ee787 100%);
+  color: #0d1117;
+  font-weight: 600;
+}
+
+.btn-download:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(88, 213, 216, 0.3);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid #58d5d8;
+  color: #58d5d8;
+}
+
+.btn-outline:hover {
+  background: rgba(88, 213, 216, 0.1);
+  transform: translateY(-2px);
+}
+
+/* ==================== SECTION STYLES ==================== */
+.about-section, .tech-section, .projects-section, .contact-section {
+  min-height: 100vh;
+  padding: 6rem 2rem;
   display: flex;
   flex-direction: column;
+  align-items: center;
   justify-content: center;
-  padding: 0 10%;
-  pointer-events: none; /* Let clicks pass through to 3D scene */
 }
 
-.section-content {
-  pointer-events: auto; /* Re-enable clicks for content */
-  max-width: 900px;
-  background: rgba(13, 17, 23, 0.85);
-  border: 1px solid #30363d;
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(5px);
+.section-header {
+  margin-bottom: 3rem;
 }
 
-/* Syntax Highlighting */
-.keyword { color: #ff7b72; }
-.string { color: #a5d6ff; }
-.function { color: #d2a8ff; }
-.variable { color: #ffa657; }
-.comment { color: #8b949e; font-style: italic; }
-
-h1 {
-  font-size: 4rem;
-  margin-bottom: 1rem;
+.terminal-prompt {
+  color: #7ee787;
+  font-size: 1.5rem;
+  font-weight: 500;
 }
 
-h2 {
-  font-size: 2.5rem;
+.section-title {
+  font-size: clamp(2rem, 5vw, 3rem);
+  text-align: center;
+  margin-bottom: 4rem;
+  color: #f0f6fc;
+}
+
+/* ==================== ABOUT SECTION ==================== */
+.about-container {
+  max-width: 1200px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+
+.about-text h2 {
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
   margin-bottom: 1.5rem;
   color: #f0f6fc;
 }
 
-/* Projects Grid */
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.5rem;
-  margin-top: 1.5rem;
+.about-text p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #8b949e;
+  margin-bottom: 1.5rem;
 }
 
-.card {
+.about-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.info-card {
+  background: rgba(33, 38, 45, 0.5);
+  border: 1px solid #30363d;
+  border-radius: 12px;
+  padding: 1.8rem;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.info-card:hover {
+  border-color: #58d5d8;
+  transform: translateX(5px);
+}
+
+.info-icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.info-card h3 {
+  font-size: 1.3rem;
+  color: #58d5d8;
+  margin-bottom: 0.8rem;
+}
+
+.info-card p {
+  color: #8b949e;
+  line-height: 1.6;
+}
+
+/* ==================== TECH STACK SECTION ==================== */
+.tech-grid {
+  max-width: 1200px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  width: 100%;
+}
+
+.tech-category {
+  background: rgba(33, 38, 45, 0.4);
+  border: 1px solid #30363d;
+  border-radius: 12px;
+  padding: 2rem;
+  backdrop-filter: blur(10px);
+}
+
+.category-title {
+  margin-bottom: 1.5rem;
+}
+
+.comment {
+  color: #7ee787;
+  font-style: italic;
+  font-size: 1.1rem;
+}
+
+.tech-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.tech-pill {
   background: #161b22;
   border: 1px solid #30363d;
-  padding: 1.5rem;
-  border-radius: 6px;
-  transition: all 0.2s ease;
-  position: relative;
-  overflow: hidden;
+  color: #c9d1d9;
+  padding: 0.6rem 1.2rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  cursor: default;
 }
 
-.card::before {
-  content: '>';
-  position: absolute;
-  top: 1.5rem;
-  left: 1rem;
-  color: #7ee787;
-  font-weight: bold;
-}
-
-.card:hover {
-  border-color: #7ee787;
+.tech-pill:hover {
+  border-color: #58d5d8;
+  color: #58d5d8;
   transform: translateY(-2px);
 }
 
-.card h3 {
-  color: #7ee787;
-  margin-left: 1.5rem;
-  margin-bottom: 0.5rem;
-  font-size: 1.25rem;
+/* ==================== PROJECTS SECTION ==================== */
+.projects-grid {
+  max-width: 1200px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+  width: 100%;
 }
 
-.card p {
+.project-card {
+  background: rgba(33, 38, 45, 0.5);
+  border: 1px solid #30363d;
+  border-radius: 12px;
+  padding: 2rem;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.project-card:hover {
+  border-color: #58d5d8;
+  box-shadow: 0 8px 30px rgba(88, 213, 216, 0.15);
+}
+
+.project-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin-bottom: 1rem;
+}
+
+.project-header h3 {
+  font-size: 1.4rem;
+  color: #7ee787;
+  flex: 1;
+}
+
+.project-links {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.project-link {
+  color: #8b949e;
+  transition: all 0.3s ease;
+  padding: 0.4rem;
+  border-radius: 4px;
+}
+
+.project-link:hover {
+  color: #58d5d8;
+  background: rgba(88, 213, 216, 0.1);
+}
+
+.project-description {
+  color: #8b949e;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  flex: 1;
+}
+
+.project-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.project-tag {
+  background: #161b22;
+  border: 1px solid #30363d;
+  color: #79c0ff;
+  padding: 0.4rem 0.9rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+}
+
+/* ==================== CONTACT SECTION ==================== */
+.contact-content {
+  max-width: 700px;
+  text-align: center;
+}
+
+.contact-content h2 {
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  margin-bottom: 1.5rem;
+  color: #f0f6fc;
+}
+
+.contact-description {
+  font-size: 1.1rem;
+  color: #8b949e;
+  line-height: 1.8;
+  margin-bottom: 3rem;
+}
+
+.contact-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 4rem;
+}
+
+.btn-contact-primary, .btn-contact-secondary {
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.btn-contact-primary {
+  background: linear-gradient(135deg, #58d5d8 0%, #7ee787 100%);
+  color: #0d1117;
+  font-weight: 600;
+}
+
+.btn-contact-secondary {
+  background: transparent;
+  border: 2px solid #58d5d8;
+  color: #58d5d8;
+}
+
+.contact-footer {
+  padding-top: 3rem;
+  border-top: 1px solid #30363d;
   color: #8b949e;
   font-size: 0.9rem;
-  line-height: 1.5;
-  margin-left: 1.5rem;
 }
 
-.tech-tag {
-  display: inline-block;
-  font-size: 0.75rem;
-  color: #a5d6ff;
-  border: 1px solid #30363d;
-  padding: 2px 8px;
-  border-radius: 12px;
-  margin-top: 10px;
-  margin-right: 5px;
-  margin-left: 1.5rem;
+.contact-footer p {
+  margin-bottom: 0.5rem;
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 768px) {
+  .about-container {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+  
+  .tech-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .hero-cta {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .btn-download, .btn-outline {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* ==================== SCROLLBAR ==================== */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0d1117;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #30363d;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #58d5d8;
 }
