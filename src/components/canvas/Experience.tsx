@@ -17,8 +17,6 @@ const CodeSymbol = ({ char, position, color }: { char: string; position: [number
     <Float speed={2} rotationIntensity={1} floatIntensity={1}>
       <group position={position} ref={rotRef}>
         <Text
-          // Using a standard font to ensure visibility if network is strict
-          font="https://fonts.gstatic.com/s/jetbrainsmono/v18/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0Pn5.woff" 
           fontSize={1.5}
           color={color}
           anchorX="center"

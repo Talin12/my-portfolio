@@ -6,7 +6,7 @@ import './styles.css';
 
 function App() {
   return (
-    <Canvas>
+    <Canvas camera={{ position: [0, 0, 10], fov: 75 }}>
       <color attach="background" args={['#0d1117']} />
       <ScrollControls pages={3} damping={0.25}>
         

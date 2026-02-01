@@ -7,4 +7,7 @@ export default defineConfig({
   build: {
     chunkSizeWarningLimit: 3000, 
   },
+  esbuild: {
+    logOverride: { 'this-is-undefined-in-esm': 'silent' }
+  }
 })

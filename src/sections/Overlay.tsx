@@ -1,7 +1,9 @@
 import { motion } from 'framer-motion';
-import React from 'react';
+// FIX: Explicitly import 'ReactNode' as a type so it isn't removed by the build
+import { type ReactNode } from 'react';
 
-const Section = ({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) => {
+// FIX: Use 'ReactNode' directly instead of 'React.ReactNode'
+const Section = ({ children, delay = 0 }: { children: ReactNode; delay?: number }) => {
   return (
     <motion.section 
       className="section"
