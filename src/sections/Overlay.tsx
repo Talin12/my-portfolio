@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import React from 'react';
 
 const Section = ({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) => {
   return (
